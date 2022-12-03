@@ -15,7 +15,7 @@ void main(List<String> arguments) async {
   if (!dir_bot_api.existsSync()) {
     dir_bot_api.createSync(recursive: true);
   }
-  int port = int.parse(Platform.environment["PORT"] ?? "8080");
+  int port = int.parse(Platform.environment["PORT"] ?? "8970");
   String host = Platform.environment["HOST"] ?? "0.0.0.0";
   String token_bot = Platform.environment["token_bot"] ?? ":";
   int owner_user_id = int.parse(Platform.environment["owner_user_id"] ?? "");
