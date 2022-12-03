@@ -52,8 +52,8 @@ jobs:
         continue-on-error: true
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-linux/telegram-bot-api
             echo $TOKEN_BOT
+            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-linux/telegram-bot-api
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
             wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-macos/telegram-bot-api
@@ -65,4 +65,4 @@ jobs:
       - name: Running bot
         continue-on-error: true
         run: |
-          dart run
+          token_bot="${{ secrets.token_bot }}" owner_user_id="${{ secrets.owner_user_id }}" api_id="${{ secrets.api_id }}" api_hash="${{ secrets.api_hash }}" dart run
