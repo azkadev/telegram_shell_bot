@@ -65,4 +65,4 @@ jobs:
       - name: Running bot
         continue-on-error: true
         run: |
-          token_bot="${{ secrets.token_bot }}" owner_user_id="${{ secrets.owner_user_id }}" api_id="${{ secrets.api_id }}" api_hash="${{ secrets.api_hash }}" dart run
+          token_bot="${{ secrets.TOKEN_BOT }}" owner_user_id="${{ secrets.OWNER_USER_ID }}" api_id="${{ secrets.API_ID }}" api_hash="${{ secrets.API_HASH }}" dart run
