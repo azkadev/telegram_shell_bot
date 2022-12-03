@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "50.0.0"
+  alfred:
+    dependency: "direct main"
+    description:
+      name: alfred
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.7"
   analyzer:
     dependency: transitive
     description:
@@ -99,6 +106,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.1"
+  enum_to_string:
+    dependency: transitive
+    description:
+      name: enum_to_string
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   ffi:
     dependency: transitive
     description:
@@ -128,7 +142,7 @@ packages:
     source: hosted
     version: "3.2.0"
   galaxeus_lib:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: galaxeus_lib
       url: "https://pub.dartlang.org"
@@ -218,6 +232,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  mime_type:
+    dependency: transitive
+    description:
+      name: mime_type
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   node_preamble:
     dependency: transitive
     description:
@@ -233,7 +254,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       url: "https://pub.dartlang.org"
@@ -267,6 +288,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
+  queue:
+    dependency: transitive
+    description:
+      name: queue
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0+1"
   shelf:
     dependency: transitive
     description:

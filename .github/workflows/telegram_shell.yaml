@@ -1,0 +1,66 @@
+name: AutoPost Telegram
+on: [workflow_dispatch]
+
+jobs:
+  update-readme-with-blog:
+    name: Update this repo's README with latest blog posts
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        include:
+          - os: ubuntu-latest
+            output-name: linux
+          - os: macOS-latest
+            output-name: macos
+          - os: windows-latest
+            output-name: windows
+
+    steps:
+      - name: Export Release Timestamp
+        run: echo "APP_VERSION=v$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        continue-on-error: true
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt update -y
+            sudo apt-get install -y wget
+          fi
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            brew update
+            brew upgrade
+            curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+            brew install wget
+          fi
+          if [ "$RUNNER_OS" == "Windows" ]; then
+          
+          fi
+        shell: bash
+      - name: Set up Dart
+        uses: cedx/setup-dart@v3
+        with:
+          architecture: x64
+          release-channel: stable
+          version: latest
+      - name: check dart version
+        run: dart --version
+      - name: Install pub Dependencies
+        run: dart pub get
+      - name: Download Telegram Bot Api
+        continue-on-error: true
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-linux/telegram-bot-api
+          fi
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-macos/telegram-bot-api
+          fi
+          if [ "$RUNNER_OS" == "macOS" ]; then 
+            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-macos/telegram-bot-api
+          fi
+        shell: bash
+      - name: Running bot
+        continue-on-error: true
+        run: dart run
