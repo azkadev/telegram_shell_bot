@@ -53,13 +53,13 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
             echo $TOKEN_BOT
-            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-linux/telegram-bot-api
+            wget https://github.com/azkadev/telegram_client/releases/download/latest-tdlib-linux/libtdjson.so.1.8.8 -O ./libtdjson.so
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
-            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-macos/telegram-bot-api
+            wget https://github.com/azkadev/telegram_client/releases/download/latest-tdlib-macos/tdlib
           fi
           if [ "$RUNNER_OS" == "macOS" ]; then 
-            wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-macos/telegram-bot-api
+            wget https://github.com/azkadev/telegram_client/releases/download/latest-tdlib-macos/libtdjson.1.8.8.dylib -O ./libtdjson.dylib
           fi
         shell: bash
       - name: Running bot

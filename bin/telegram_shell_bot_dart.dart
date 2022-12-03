@@ -4,9 +4,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:telegram_client/telegram_client.dart';
-import 'package:alfred/alfred.dart';
 import 'package:galaxeus_lib/galaxeus_lib.dart';
 import 'package:path/path.dart' as p;
+import 'package:telegram_client/scheme/tdlib_scheme.dart' as tdlib_scheme;
+
+String get format_lib {
+  if (Platform.isMacOS) {
+    return "dylib";
+  }
+  return "so";
+}
 
 void main(List<String> arguments) async {
   Directory current_dir = Directory.current;
@@ -15,27 +22,17 @@ void main(List<String> arguments) async {
   if (!dir_bot_api.existsSync()) {
     dir_bot_api.createSync(recursive: true);
   }
-  int port = int.parse(Platform.environment["PORT"] ?? "8970");
-  String host = Platform.environment["HOST"] ?? "0.0.0.0";
   String token_bot = Platform.environment["token_bot"] ?? ":";
   int owner_user_id = int.parse(Platform.environment["owner_user_id"] ?? "");
   print(token_bot.split(":").first);
   TelegramBotApiServer telegramBotApiServer = TelegramBotApiServer();
-  telegramBotApiServer.run(
-    executable: "./telegram-bot-api",
-    arguments: telegramBotApiServer.optionsParameters(
-      api_id: Platform.environment["api_id"] ?? "",
-      api_hash: Platform.environment["api_hash"] ?? '',
-      http_port: "9000",
-      dir: dir_bot_api.path,
-    ),
-  );
-  TelegramBotApi tg = TelegramBotApi(token_bot, clientOption: {
-    "api": "http://0.0.0.0:9000/",
-  });
 
-  tg.request("setWebhook", parameters: {"url": "http://${host}:${port}"});
-  Alfred app = Alfred(logLevel: LogType.error);
+  Tdlib tg = Tdlib("./libtdjson.${format_lib}");
+  // TelegramBotApi tg = TelegramBotApi(token_bot, clientOption: {
+  //   "api": "http://0.0.0.0:9000/",
+  // });
+
+  // tg.request("setWebhook", parameters: {"url": "http://${host}:${port}"});
   EventEmitter eventEmitter = EventEmitter();
   Process shell = await Process.start("bash", []);
   late String result = "";
@@ -110,17 +107,67 @@ void main(List<String> arguments) async {
     }
   });
 
-  app.all("/", (req, res) async {
-    if (req.method.toLowerCase() != "post") {
-      return res.json({"@type": "ok", "message": "server run normal"});
-    } else {
-      Map body = await req.bodyAsJsonMap;
-      eventEmitter.emit("update", null, body);
-      return res.json({"@type": "ok", "message": "server run normal"});
+  tg.on(tg.event_update, (UpdateTd update) async {
+    // print(json.encode(update.raw));
+
+    /// authorization update
+    if (update.raw["@type"] == "updateAuthorizationState") {
+      if (update.raw["authorization_state"] is Map) {
+        var authStateType = update.raw["authorization_state"]["@type"];
+
+        /// init tdlib parameters
+        await tg.initClient(
+          update,
+          clientId: update.client_id,
+          tdlibParameters: update.client_option,
+          isVoid: true,
+        );
+
+        if (authStateType == "authorizationStateLoggingOut") {}
+        if (authStateType == "authorizationStateClosed") {
+          print("close: ${update.client_id}");
+          tg.exitClient(update.client_id);
+        }
+        if (authStateType == "authorizationStateWaitPhoneNumber") { 
+          /// use this if you wan't login as bot
+          await tg.callApi(
+            tdlibFunction: tdlib_scheme.TdlibFunction.checkAuthenticationBotToken(
+              token: token_bot,
+            ),
+            clientId: update.client_id, // add this if your project more one client
+          );
+
+        }
+        if (authStateType == "authorizationStateWaitCode") { 
+        }
+        if (authStateType == "authorizationStateWaitPassword") {
+          
+        }
+
+        if (authStateType == "authorizationStateReady") {
+          Map get_me = await tg.getMe(clientId: update.client_id);
+          print(get_me);
+        }
+      }
+    }
+
+    if (update.raw["@type"] == "updateNewMessage") {
+      if (update.raw["message"] is Map) {
+        /// tdlib scheme is not full real because i generate file origin to dart with my script but you can still use
+        tdlib_scheme.Message message = tdlib_scheme.Message(update.raw["message"]);
+        int chat_id = message.chat_id ?? 0;
+        if (message.content.special_type == "messageText") {
+          if (update.raw["message"]["content"]["text"] is Map && update.raw["message"]["content"]["text"]["text"] is String) {
+            String text = (update.raw["message"]["content"]["text"]["text"] as String);
+
+            result = "";
+            shell.stdin.write("${text}\n");
+          }
+        }
+      }
     }
   });
 
-  await app.listen(port, host);
-
-  print("Server run on ${app.server!.address.address}}");
+  await tg.initIsolate();
+  print("succes init isolate");
 }
