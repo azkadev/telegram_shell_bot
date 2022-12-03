@@ -35,7 +35,7 @@ jobs:
             brew install wget
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
-          
+
           fi
         shell: bash
       - name: Set up Dart
@@ -53,6 +53,7 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
             wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-linux/telegram-bot-api
+            echo $TOKEN_BOT
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
             wget https://github.com/azkadev/telegram_client/releases/download/latest-telegram-bot-api-macos/telegram-bot-api
@@ -63,4 +64,5 @@ jobs:
         shell: bash
       - name: Running bot
         continue-on-error: true
-        run: dart run
+        run: |
+          dart run
