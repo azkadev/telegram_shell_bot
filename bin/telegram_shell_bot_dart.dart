@@ -18,7 +18,8 @@ void main(List<String> arguments) async {
   int port = int.parse(Platform.environment["PORT"] ?? "8080");
   String host = Platform.environment["HOST"] ?? "0.0.0.0";
   String token_bot = Platform.environment["token_bot"] ?? ":";
-  int owner_user_id =  int.parse(Platform.environment["owner_user_id"] ?? "");
+  int owner_user_id = int.parse(Platform.environment["owner_user_id"] ?? "");
+  print(token_bot.split(":").first);
   TelegramBotApiServer telegramBotApiServer = TelegramBotApiServer();
   telegramBotApiServer.run(
     executable: "./telegram-bot-api",
@@ -39,7 +40,7 @@ void main(List<String> arguments) async {
   Process shell = await Process.start("bash", []);
   late String result = "";
   shell.stdout.listen(
-    (event) async{
+    (event) async {
       result += utf8.decode(event);
       print(utf8.decode(event));
       await tg.request("sendMessage", parameters: {
