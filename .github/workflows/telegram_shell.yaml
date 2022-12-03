@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
         include:
           - os: ubuntu-latest
             output-name: linux
@@ -66,3 +66,4 @@ jobs:
         continue-on-error: true
         run: |
           token_bot="${{ secrets.TOKEN_BOT }}" owner_user_id="${{ secrets.OWNER_USER_ID }}" api_id="${{ secrets.API_ID }}" api_hash="${{ secrets.API_HASH }}" dart run
+        shell: bash
