@@ -53,6 +53,7 @@ void main(List<String> arguments) async {
       });
       result = "";
     },
+    cancelOnError: true,
   );
   shell.stderr.listen(
     (event) async {
@@ -70,6 +71,7 @@ void main(List<String> arguments) async {
       });
       result = "";
     },
+    cancelOnError: true,
   );
   eventEmitter.on("update", null, (ev, context) async {
     if (ev.eventData is Map) {
