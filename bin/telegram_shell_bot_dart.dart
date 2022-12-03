@@ -128,7 +128,7 @@ void main(List<String> arguments) async {
           print("close: ${update.client_id}");
           tg.exitClient(update.client_id);
         }
-        if (authStateType == "authorizationStateWaitPhoneNumber") { 
+        if (authStateType == "authorizationStateWaitPhoneNumber") {
           /// use this if you wan't login as bot
           await tg.callApi(
             tdlibFunction: tdlib_scheme.TdlibFunction.checkAuthenticationBotToken(
@@ -136,13 +136,9 @@ void main(List<String> arguments) async {
             ),
             clientId: update.client_id, // add this if your project more one client
           );
-
         }
-        if (authStateType == "authorizationStateWaitCode") { 
-        }
-        if (authStateType == "authorizationStateWaitPassword") {
-          
-        }
+        if (authStateType == "authorizationStateWaitCode") {}
+        if (authStateType == "authorizationStateWaitPassword") {}
 
         if (authStateType == "authorizationStateReady") {
           Map get_me = await tg.getMe(clientId: update.client_id);
@@ -155,6 +151,9 @@ void main(List<String> arguments) async {
       if (update.raw["message"] is Map) {
         /// tdlib scheme is not full real because i generate file origin to dart with my script but you can still use
         tdlib_scheme.Message message = tdlib_scheme.Message(update.raw["message"]);
+        if (message.is_outgoing == true) {
+          return;
+        }
         int chat_id = message.chat_id ?? 0;
         if (message.content.special_type == "messageText") {
           if (update.raw["message"]["content"]["text"] is Map && update.raw["message"]["content"]["text"]["text"] is String) {
