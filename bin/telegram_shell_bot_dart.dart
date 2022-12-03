@@ -21,7 +21,7 @@ void main(List<String> arguments) async {
   int owner_user_id =  int.parse(Platform.environment["owner_user_id"] ?? "");
   TelegramBotApiServer telegramBotApiServer = TelegramBotApiServer();
   telegramBotApiServer.run(
-    executable: "telegram-bot-api",
+    executable: "./telegram-bot-api",
     arguments: telegramBotApiServer.optionsParameters(
       api_id: Platform.environment["api_id"] ?? "",
       api_hash: Platform.environment["api_hash"] ?? '',

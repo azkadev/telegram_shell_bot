@@ -1,4 +1,4 @@
-name: AutoPost Telegram
+name: Running Telegram shell
 on: [workflow_dispatch]
 
 jobs:
